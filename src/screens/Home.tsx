@@ -1,11 +1,17 @@
 import { useCallback, useEffect, useState } from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import {
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import PalettePreview from '../components/PalettePreview';
 
-const Home = ({ navigation }: any) => {
+const Home = ({ navigation, route }: any) => {
   const [palettes, setPalettes] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
-
+  const newPalette = route.params ? route.params.newPalette : null;
   const URL = 'https://color-palette-api.kadikraman.vercel.app/palettes';
 
   const handleFetchPalettes = useCallback(async () => {
@@ -18,7 +24,7 @@ const Home = ({ navigation }: any) => {
 
   useEffect(() => {
     handleFetchPalettes();
-  });
+  }, [handleFetchPalettes]);
 
   const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
@@ -28,20 +34,34 @@ const Home = ({ navigation }: any) => {
     }, 1000);
   }, [handleFetchPalettes]);
 
+  useEffect(() => {
+    if (newPalette) {
+      setPalettes((current: any): any => [newPalette, ...current]);
+    }
+  }, [newPalette, handleFetchPalettes]);
+
   return (
-    <FlatList
-      style={styles.list}
-      data={palettes}
-      keyExtractor={(item: any) => item.paletteName}
-      renderItem={({ item }) => (
-        <PalettePreview
-          onPress={() => navigation.push('ColorPalette', item)}
-          palette={item}
-        />
-      )}
-      refreshing={isRefreshing}
-      onRefresh={handleRefresh}
-    />
+    <SafeAreaView>
+      <TouchableOpacity
+        style={styles.addNewColorPalette}
+        onPress={() => navigation.navigate('AddNewPaletteModal')}
+      >
+        <Text>Add New Color Palette</Text>
+      </TouchableOpacity>
+      <FlatList
+        style={styles.list}
+        data={palettes}
+        keyExtractor={(item: any) => item.paletteName}
+        renderItem={({ item }) => (
+          <PalettePreview
+            onPress={() => navigation.push('ColorPalette', item)}
+            palette={item}
+          />
+        )}
+        refreshing={isRefreshing}
+        onRefresh={handleRefresh}
+      />
+    </SafeAreaView>
   );
 };
 
@@ -51,6 +71,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: 'white',
   },
+  addNewColorPalette: {},
 });
 
 export default Home;
