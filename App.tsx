@@ -1,5 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import AddNewPaletteModal from './src/screens/AddNewPaletteModal';
 import ColorPalette from './src/screens/ColorPalette';
 import Home from './src/screens/Home';
 
@@ -27,6 +28,10 @@ export default function App() {
           name="Main"
           component={MainStackScreen}
           options={{ headerShown: false }}
+        />
+        <RootStack.Screen
+          name="AddNewPaletteModal"
+          component={AddNewPaletteModal}
         />
       </RootStack.Navigator>
     </NavigationContainer>
