@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  extends: '@react-native-community',
+  extends: ['@react-native-community', 'plugin:react/jsx-runtime'],
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
   overrides: [
@@ -13,4 +13,5 @@ module.exports = {
       },
     },
   ],
+  'prettier/prettier': ['error', { singleQuote: true, parser: 'flow' }],
 };
